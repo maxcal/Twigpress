@@ -2,9 +2,9 @@
 /*
 Plugin Name: Twigpress
 Plugin URI: http://www.github.com/maxcal/twigpress/
-Description: The twig templating engine for wordpress.
+Description: Use the Twig Engine for your wordpress templates, built on the work of Fabien Potencier and Darko Golešö .
 Version: 0.1
-Author: Darko Goleš, Max Calabrese, Fabien Potencier
+Author: Max Calabrese, 
 Author URI: http://URI_Of_The_Plugin_Author
 License: GPL2
 */
@@ -29,6 +29,8 @@ License: GPL2
 require_once dirname(__FILE__) . '/lib/Twig/Autoloader.php';
 //My custom class made, I also want it to be autoloaded
 require_once dirname(__FILE__) . '/twigpress_autoloader.php';
+// Proxyloader
+require_once dirname(__FILE__) . '/twigpress_proxy.php';
  
 function twigAutoLoad() {
     Twig_Autoloader::register();
