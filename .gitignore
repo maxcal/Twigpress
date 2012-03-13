@@ -1,0 +1,23 @@
+# https://github.com/github/gitignore/blob/master/Global/OSX.gitignore
+.DS_Store
+# Thumbnails
+._*
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# https://github.com/github/gitignore/blob/master/Global/Windows.gitignore
+# Windows image file caches
+Thumbs.db 
+
+# Folder config file
+Desktop.ini
+
+# https://github.com/github/gitignore/blob/master/Global/Linux.gitignore
+.*
+!.gitignore
+*~
+
+# KDE
+.directory
+/nbproject/private/
