@@ -9,7 +9,7 @@ Author URI: http://URI_Of_The_Plugin_Author
 License: GPL2
 */
 
-/*  Copyright 2012
+/*  Copyright Max Calabrese 2012
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 

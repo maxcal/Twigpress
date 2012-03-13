@@ -1,8 +1,9 @@
 <?php
-/*
-  @author: Darko Goleš, Max Calabres
-  @author URI: http://inchoo.net/author/darko.goles/
-*/
+
+/**
+ * @name        Twigpress_Autoloader
+ * @package     twigpress_plugin
+ */
 class Twigpress_Autoloader {
  
     static public function register() {
