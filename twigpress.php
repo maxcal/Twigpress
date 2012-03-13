@@ -4,12 +4,12 @@ Plugin Name: Twigpress
 Plugin URI: http://www.github.com/maxcal/twigpress/
 Description: The twig templating engine for wordpress.
 Version: 0.1
-Author: Darko Goleš, Max Calabrese
+Author: Darko Goleš, Max Calabrese, Fabien Potencier
 Author URI: http://URI_Of_The_Plugin_Author
 License: GPL2
 */
 
-/*  Copyright 2012  Max Calabrese  max.calabrese@ymail.com
+/*  Copyright 2012
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -32,7 +32,7 @@ require_once dirname(__FILE__) . '/twigpress_autoloader.php';
  
 function twigAutoLoad() {
     Twig_Autoloader::register();
-    Wp_TwigEngine_Autoloader::register();
+    Twigpress_Autoloader::register();
 }
- 
+
 add_action('init', 'twigAutoLoad');
