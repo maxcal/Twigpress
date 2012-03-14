@@ -12,7 +12,7 @@ Twig aims to be flexible, fast and secure.
 
 
 
-This license applies only to Twigpress - See the lib/Twig folder for Twig licences and authors.
+This license applies only to Twigpress - See the lib/Twig folder for Twig license and authors.
    
 
     (c) Max Calabrese (max.calabrese@ymail.com)
