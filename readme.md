@@ -1,14 +1,14 @@
 ## Twigpress
 
-### Twig for Wordpress
+### Twig for Wordpress plugin
 
-Twig is a general purpose template engine. Twigpress provides a Twig template engine for wordpress themes.  
+Twig is a general purpose template engine. Twigpress provides a Twig template engine for Wordpress themes.  
 Twigpress aims to make the process of creating Wordpress themes more fun, creative and beautiful. 
 
 Twig is a fabulous template engine that will feel right at home to anyone with exposure to other text-based template languages, such as Smarty, Django, or Jinja.
 Twig aims to be flexible, fast and secure.
 
-*The Twigpress plugin is no way affiliated or endorsed by Sensio Labs or the Twig Team.*
+**The Twigpress plugin is no way affiliated or endorsed by Sensio Labs or the Twig Team.**
 
 
 
