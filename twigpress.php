@@ -25,16 +25,74 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-//Main twig library autoloader file
-require_once dirname(__FILE__) . '/lib/Twig/Autoloader.php';
-//My custom class made, I also want it to be autoloaded
-require_once dirname(__FILE__) . '/twigpress_autoloader.php';
-// Proxyloader
-require_once dirname(__FILE__) . '/twigpress_proxy.php';
- 
-function twigAutoLoad() {
-    Twig_Autoloader::register();
-    Twigpress_Autoloader::register();
+
+class Twigpress{
+    
+    private $loader;
+    private $twig;
+    private $template;
+    private $globalFunctions = true;
+    
+    /**
+     * Run on class contruction
+     * Registers twig outloader and dependencies
+     */
+    public function __construct() {
+        require_once dirname(__FILE__) . '/lib/Twig/Autoloader.php';
+        Twig_Autoloader::register();
+    }
+
+    /**
+     * Run when wordpress is initialized.
+     */
+    public function init()
+    {
+        $this->loader = new Twig_Loader_Filesystem( TEMPLATEPATH );
+        $this->twig = new Twig_Environment($this->loader, array(
+            'cache' => false
+        ));
+        if ($this->globalFunctions) {
+            $this->proxyGlobalFunctions();
+        }
+    }
+    
+    public function getTwig(){
+        return $this->twig;
+    }
+    /**
+     * Allows twig templates to access all global functions
+     * @return void 
+     */
+    public function proxyGlobalFunctions(){
+        $this->twig->registerUndefinedFunctionCallback(function ($name) {
+            if (function_exists($name)) {
+                return new Twig_Function_Function($name);
+            }
+            return false;
+        });
+    }
+
+    /**
+     * 
+     * @param string $template
+     * @param array $arr 
+     */
+    public function dispatch($template, array $arr = array()) {
+        $template_info = pathinfo($template);
+        $tmp_root_name = $template_info['dirname'] . DIRECTORY_SEPARATOR . $template_info['filename'];
+        
+        $arr = array_merge_recursive($arr, array(
+            'posts' => $posts
+        ));
+        
+        if (file_exists("$tmp_root_name.html.twig")){
+             $this->template = $this->twig->loadTemplate($template_info['filename'].'.html.twig');
+        }
+        
+        $this->template->display($arr);
+    }
 }
 
-add_action('init', 'twigAutoLoad');
+
+$Twigpress = new Twigpress();
+add_action('init', array($Twigpress, 'init'));
