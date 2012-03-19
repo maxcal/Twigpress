@@ -28,17 +28,20 @@ License: GPL2
 
 class Twigpress{
     
-    private $loader;
     private $twig;
     private $template;
+    private $cache = false;
     private $globalFunctions = true;
-    
+    private $globalVariables = true;
+
+
     /**
      * Run on class contruction
      * Registers twig outloader and dependencies
      */
     public function __construct() {
         require_once dirname(__FILE__) . '/lib/Twig/Autoloader.php';
+        require_once dirname(__FILE__) . '/template_loader.php';
         Twig_Autoloader::register();
     }
 
@@ -47,12 +50,16 @@ class Twigpress{
      */
     public function init()
     {
-        $this->loader = new Twig_Loader_Filesystem( TEMPLATEPATH );
-        $this->twig = new Twig_Environment($this->loader, array(
-            'cache' => false
-        ));
+        $this->twig = new Twig_Environment(
+                new Twig_Loader_Filesystem( TEMPLATEPATH ), 
+                array(
+                    'cache' => $this->cache
+                ));
         if ($this->globalFunctions) {
             $this->proxyGlobalFunctions();
+        }
+        if ($this->globalVariables) {
+            $this->proxyGlobalVariables();
         }
     }
     
@@ -63,7 +70,8 @@ class Twigpress{
      * Allows twig templates to access all global functions
      * @return void 
      */
-    public function proxyGlobalFunctions(){
+    public function proxyGlobalFunctions()
+    {
         $this->twig->registerUndefinedFunctionCallback(function ($name) {
             if (function_exists($name)) {
                 return new Twig_Function_Function($name);
@@ -71,23 +79,50 @@ class Twigpress{
             return false;
         });
     }
+    /**
+     * Gives twig templates access to wordpress global variables
+     * @return void
+     */
+    public function proxyGlobalVariables(){
+        global $posts, $post, $wp_did_header, $wp_did_template_redirect, $wp_query, $wp_rewrite, $wpdb, $wp_version, $wp, $id, $comment, $user_ID;
+        $wp_globals = array(
+            'posts' => $posts,
+            'post'  => $post,
+            'wp_did_header' => $wp_did_header,
+            'wp_did_template_redirect' => $wp_did_template_redirect,
+            'wp_query' => $wp_query,
+            'wp_rewrite' => $wp_rewrite,
+            'wpdb' => $wpdb,
+            'wp_version' => $wp_version,
+            'wp'    => $wp,
+            'id'    => $id,
+            'comment' => $comment,
+            'user_ID' => $user_ID
+        );
+        
+        foreach ($wp_globals as $name => $value){
+            $this->twig->addGlobal($name, $value);
+        }   
+    }
 
     /**
+     * Auto-Magic convenience function 
+     * loads a twig file according to Wordpress template inheritance rules.
      * 
-     * @param string $template
-     * @param array $arr 
+     * @param array $arr an array of params to send to the view.
      */
-    public function autoDisplay($template, array $arr = array()) {
-        $template_info = pathinfo($template);
-        $tmp_root_name = $template_info['dirname'] . DIRECTORY_SEPARATOR . $template_info['filename'];
-        
+    public function autoDisplay(array $arr = array()) 
+    {
+        global $posts;
+         
         $arr = array_merge_recursive($arr, array(
-            'posts' => $posts
+            'posts' => $posts,
         ));
         
-        if (file_exists("$tmp_root_name.html.twig")){
-             $this->template = $this->twig->loadTemplate($template_info['filename'].'.html.twig');
-        }
+        $loader = new Twigpress_Template_Loader();
+        
+        $this->template = $this->twig->loadTemplate(
+                $loader->get_template());
         
         $this->template->display($arr);
     }
