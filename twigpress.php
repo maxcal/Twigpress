@@ -41,7 +41,7 @@ class Twigpress{
      */
     public function __construct() {
         require_once dirname(__FILE__) . '/lib/Twig/Autoloader.php';
-        require_once dirname(__FILE__) . '/template_loader.php';
+        require_once dirname(__FILE__) . '/lib/template_loader.php';
         Twig_Autoloader::register();
     }
 
