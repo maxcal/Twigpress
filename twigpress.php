@@ -77,7 +77,7 @@ class Twigpress{
      * @param string $template
      * @param array $arr 
      */
-    public function dispatch($template, array $arr = array()) {
+    public function autoDisplay($template, array $arr = array()) {
         $template_info = pathinfo($template);
         $tmp_root_name = $template_info['dirname'] . DIRECTORY_SEPARATOR . $template_info['filename'];
         
@@ -92,7 +92,6 @@ class Twigpress{
         $this->template->display($arr);
     }
 }
-
 
 $Twigpress = new Twigpress();
 add_action('init', array($Twigpress, 'init'));
