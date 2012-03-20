@@ -39,6 +39,16 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
         
     }
   
+      
+    /**
+     * @covers Twigpress::__addPath
+     */
+    public function testAppendPath() {
+        
+        $this->object->appendPath(MOCKUPS_DIR);
+        $paths = $this->object->getLoader()->getPaths();
+        $this->assertContains(MOCKUPS_DIR, $paths);
+    }
     
 }
 
