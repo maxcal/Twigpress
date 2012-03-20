@@ -9,7 +9,7 @@ require_once dirname(__FILE__) . '/../twigpress.php';
 class twigpressTest extends PHPUnit_Framework_TestCase {
 
     /**
-     * @var foo
+     * @var Twigpress
      */
     protected $object;
 
@@ -36,7 +36,6 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
         // Assert that twigpress will look for missing templates
         $paths = $this->object->getLoader()->getPaths();
         $this->assertEquals($paths[0], PROJECT_ROOT);
-        
     }
   
       
@@ -59,6 +58,21 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
         $paths = $this->object->getLoader()->getPaths();
         $this->assertContains(MOCKUPS_DIR, $paths);
         $this->assertEquals($paths[0], MOCKUPS_DIR);
+    }
+
+    public function testDisplay(){
+        $this->object->prependPath(MOCKUPS_DIR);
+        $template = $this->object->loadTemplate('asset.twig');
+        $this->assertEquals('hello world', $template->render(array()));
+    }
+
+    public function testRegisterGlobalFunctions(){
+        $this->object->prependPath(MOCKUPS_DIR);
+        $this->object->registerGlobalFunctions();
+                
+        $template = $this->object->loadTemplate('globalfn.twig');
+
+        $this->assertEquals('abc', $template->render(array()));
     }
 }
 
