@@ -48,6 +48,7 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
         $this->object->appendPath(MOCKUPS_DIR);
         $paths = $this->object->getLoader()->getPaths();
         $this->assertContains(MOCKUPS_DIR, $paths);
+        $this->assertEquals($paths[count($paths)-1], MOCKUPS_DIR);
     }
     
     /**
