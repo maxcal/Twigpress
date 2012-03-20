@@ -41,7 +41,12 @@ class Twigpress extends Twig_Environment {
         require_once dirname(__FILE__) . '/lib/template_loader.php';
         parent::__construct(new Twig_Loader_Filesystem( array( dirname(__FILE__) )  ), array());
     }
-    
+
+    /**
+     * Append a path to the Loader paths.
+     * 
+     * @param string $path 
+     */
     public function appendPath($path){
         $paths = $this->loader->getPaths();
         $paths[] = $path;
