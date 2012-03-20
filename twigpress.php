@@ -53,7 +53,11 @@ class Twigpress extends Twig_Environment {
         $this->loader->setPaths($paths);
     }
 
-    
+    public function prependPath($path){
+        $paths = $this->loader->getPaths();
+        array_unshift ( $paths, $path );
+        $this->loader->setPaths($paths);
+    }
 }
 
 $Twigpress = new Twigpress();

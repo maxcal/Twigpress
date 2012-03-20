@@ -50,6 +50,15 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
         $this->assertContains(MOCKUPS_DIR, $paths);
     }
     
+    /**
+     * @covers Twigpress::__addPath
+     */
+    public function testPrependPath() {
+        $this->object->prependPath(MOCKUPS_DIR);
+        $paths = $this->object->getLoader()->getPaths();
+        $this->assertContains(MOCKUPS_DIR, $paths);
+        $this->assertEquals($paths[0], MOCKUPS_DIR);
+    }
 }
 
 ?>
