@@ -64,10 +64,7 @@ class Twigpress extends Twig_Environment {
             $this->proxyGlobalVariables();
         }
     }
-    
-    public function getTwig(){
-        return $this;
-    }
+
     /**
      * Allows twig templates to access all global functions
      * @return void 
