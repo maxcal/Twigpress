@@ -5,7 +5,7 @@ Plugin URI: http://www.github.com/maxcal/twigpress/
 Description: Use the Twig Engine for your wordpress templates, built on the work of Fabien Potencier and Darko Golešö .
 Version: 0.1
 Author: Max Calabrese, 
-Author URI: http://URI_Of_The_Plugin_Author
+Author URI: http://github.com/maxcal
 License: GPL2
 */
 
@@ -25,24 +25,26 @@ License: GPL2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+require_once dirname(__FILE__) . '/lib/Twig/Autoloader.php';
+Twig_Autoloader::register();
 
-class Twigpress{
+class Twigpress extends Twig_Environment {
     
+    protected $cache = false;
     private $twig;
     private $template;
-    private $cache = false;
     private $globalFunctions = true;
     private $globalVariables = true;
-
+    private $masterLayout = true;
 
     /**
      * Run on class contruction
      * Registers twig outloader and dependencies
      */
     public function __construct() {
-        require_once dirname(__FILE__) . '/lib/Twig/Autoloader.php';
+        
         require_once dirname(__FILE__) . '/lib/template_loader.php';
-        Twig_Autoloader::register();
+        parent::__construct(new Twig_Loader_Filesystem( array( dirname(__FILE__) )  ), array());
     }
 
     /**
@@ -50,11 +52,11 @@ class Twigpress{
      */
     public function init()
     {
-        $this->twig = new Twig_Environment(
-                new Twig_Loader_Filesystem( TEMPLATEPATH ), 
-                array(
-                    'cache' => $this->cache
-                ));
+        // Add the template directory to the Twig Filesystem
+        $loader = $this->getLoader();
+        $paths = array_merge(array(TEMPLATEPATH), $loader->getPaths());
+        $this->getLoader()->setPaths($paths);
+        
         if ($this->globalFunctions) {
             $this->proxyGlobalFunctions();
         }
@@ -64,7 +66,7 @@ class Twigpress{
     }
     
     public function getTwig(){
-        return $this->twig;
+        return $this;
     }
     /**
      * Allows twig templates to access all global functions
@@ -72,7 +74,7 @@ class Twigpress{
      */
     public function proxyGlobalFunctions()
     {
-        $this->twig->registerUndefinedFunctionCallback(function ($name) {
+        $this->registerUndefinedFunctionCallback(function ($name) {
             if (function_exists($name)) {
                 return new Twig_Function_Function($name);
             }
@@ -101,7 +103,7 @@ class Twigpress{
         );
         
         foreach ($wp_globals as $name => $value){
-            $this->twig->addGlobal($name, $value);
+            $this->addGlobal($name, $value);
         }   
     }
 
@@ -114,15 +116,24 @@ class Twigpress{
     public function autoDisplay(array $arr = array()) 
     {
         global $posts;
-         
+        $loader = new Twigpress_Template_Loader(); 
+       
+        $temp = $loader->get_template();
+        
         $arr = array_merge_recursive($arr, array(
             'posts' => $posts,
         ));
         
-        $loader = new Twigpress_Template_Loader();
-        
-        $this->template = $this->twig->loadTemplate(
-                $loader->get_template());
+        /**
+        * Handle masterLayout global template inheritance
+        */
+        if ($this->masterLayout){
+            $arr['temp'] = $temp;
+            $this->template = $this->loadTemplate('proxy.twig');
+        }
+        else {
+            $this->template = $this->twig->loadTemplate($temp);
+        }
         
         $this->template->display($arr);
     }
