@@ -8,7 +8,7 @@
 /**
  * Twigpress template loader simulates wordpress template inheritance.
  */
-class Twigpress_Template_Loader {
+class Twigpress_TemplateLoader {
 
     /**
      *
@@ -23,6 +23,7 @@ class Twigpress_Template_Loader {
 
     private function get_query_template($type, $templates = null) {
         $paths = $this->loader->getPaths();
+        
         $fn = null;
 
         if (empty($templates)) {
