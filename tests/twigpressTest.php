@@ -61,16 +61,16 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testDisplay(){
-        $this->object->prependPath(MOCKUPS_DIR);
-        $template = $this->object->loadTemplate('asset.twig');
-        $this->assertEquals('hello world', $template->render(array()));
+        $this->object->prependPath(MOCKUPS_DIR.'/twig');
+        $template = $this->object->loadTemplate('helloworld.test.twig');
+        $this->assertContains('Hello World!', $template->render(array()));
     }
 
     public function testRegisterGlobalFunctions(){
-        $this->object->prependPath(MOCKUPS_DIR);
+        $this->object->prependPath(MOCKUPS_DIR.'/twig');
         $this->object->registerGlobalFunctions();
                 
-        $template = $this->object->loadTemplate('globalfn.twig');
+        $template = $this->object->loadTemplate('php_implode.test.twig');
 
         $this->assertEquals('abc', $template->render(array()));
     }
