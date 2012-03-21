@@ -31,6 +31,8 @@ class Twigpress_TemplateLoader {
         }
 
         foreach ($paths as $path) {
+            
+            $path = "$path/"; 
             $glob = glob("$path*.twig");
 
             foreach ($templates as $template) {
