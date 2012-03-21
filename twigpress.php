@@ -44,3 +44,9 @@ $TwigpressLoader->registerPrefixes(array(
 $TwigpressLoader->register();
 Twig_Autoloader::register();
 
+
+$Twigpress = new Twigpress_Environment();
+
+if (function_exists("add_action")){
+    add_action('init', array($Twigpress, 'init'));
+}
