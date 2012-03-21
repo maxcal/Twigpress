@@ -15,54 +15,47 @@ class Twigpress_Template_Loader {
      * @var Twig_Loader_Filesystem 
      */
     private $loader;
+    private $query;
 
     function __construct($twig_loader_filesystem = null) {
         $this->loader = $twig_loader_filesystem;
-    }
-    
-    function walkPath($path, $templates){
-        
     }
 
     private function get_query_template($type, $templates = null) {
         $paths = $this->loader->getPaths();
         $fn = null;
-        
-        if ( empty( $templates ) ){
+
+        if (empty($templates)) {
             $templates = array($type);
         }
 
         foreach ($paths as $path) {
             $glob = glob("$path*.twig");
-            
+
             foreach ($templates as $template) {
-                
-                $file = $path.$template;
-               
-                if (in_array($file.'.html.twig', $glob)){
-                    return $template.'.html.twig';
+
+                $file = $path . $template;
+
+                if (in_array($file . '.html.twig', $glob)) {
+                    return $template . '.html.twig';
                 }
-            }      
+            }
         }
-        
+
         return $fn;
-        
     }
 
     private function get_index_template() {
         return $this->get_query_template('index');
     }
 
-    private function get_foo_template() {
-        return $this->get_query_template('foo');
-    }
     /**
      * Retrieve path of 404 template in current or parent template.
 
      * @return string
      */
     private function get_404_template() {
-        
+        return $this->get_query_template('404');
     }
 
     /**
@@ -70,8 +63,18 @@ class Twigpress_Template_Loader {
      *
      * @return string
      */
-    private function get_archive_template() {
+    private function get_archive_template($query) {
         
+        $post_type = $query->get_queried_object()->post_type;
+
+        $templates = array();
+
+        if ($post_type) {
+            $templates[] = "archive-{$post_type}";
+        }
+        $templates[] = 'archive';
+
+        return $this->get_query_template('archive', $templates);
     }
 
     /**
@@ -81,8 +84,16 @@ class Twigpress_Template_Loader {
      *
      * @return string
      */
-    private function get_author_template() {
-        
+    private function get_author_template($query) {
+        $author = $query->get_queried_object();
+
+        $templates = array();
+
+        $templates[] = "author-{$author->user_nicename}";
+        $templates[] = "author-{$author->ID}";
+        $templates[] = 'author';
+
+        return $this->get_query_template('author', $templates);
     }
 
     /**
@@ -94,8 +105,16 @@ class Twigpress_Template_Loader {
      *
      * @return string
      */
-    private function get_category_template() {
-        
+    private function get_category_template($query) {
+        $category = $query->get_queried_object();
+
+        $templates = array();
+
+        $templates[] = "category-{$category->slug}";
+        $templates[] = "category-{$category->term_id}";
+        $templates[] = 'category';
+
+        return $this->get_query_template('category', $templates);
     }
 
     /**
@@ -128,8 +147,18 @@ class Twigpress_Template_Loader {
      *
      * @return string
      */
-    private function get_taxonomy_template() {
-        
+    private function get_taxonomy_template($query = null) {
+
+        $term = $query->get_queried_object();
+        $taxonomy = $term->taxonomy;
+
+        $templates = array();
+
+        $templates[] = "taxonomy-$taxonomy-{$term->slug}";
+        $templates[] = "taxonomy-$taxonomy";
+        $templates[] = 'taxonomy';
+
+        return $this->get_query_template('taxonomy', $templates);
     }
 
     /**
@@ -140,7 +169,7 @@ class Twigpress_Template_Loader {
      * @return string
      */
     private function get_date_template() {
-        
+        return $this->get_query_template('date');
     }
 
     /**
@@ -156,7 +185,7 @@ class Twigpress_Template_Loader {
      * @return string
      */
     private function get_home_template() {
-        
+        return $this->get_query_template('home');
     }
 
     /**
@@ -170,7 +199,7 @@ class Twigpress_Template_Loader {
      * @return string
      */
     private function get_front_page_template() {
-        
+        return $this->get_query_template('front_page');
     }
 
     /**
@@ -185,7 +214,7 @@ class Twigpress_Template_Loader {
      * @return string
      */
     private function get_page_template() {
-        
+        return $this->get_query_template( 'page' );
     }
 
     /**
@@ -196,7 +225,7 @@ class Twigpress_Template_Loader {
      * @return string
      */
     private function get_paged_template() {
-        
+        return $this->get_query_template('paged');
     }
 
     /**
@@ -207,7 +236,7 @@ class Twigpress_Template_Loader {
      * @return string
      */
     private function get_search_template() {
-        
+        return $this->get_query_template('search');
     }
 
     /**
@@ -217,8 +246,15 @@ class Twigpress_Template_Loader {
      *
      * @return string
      */
-    private function get_single_template() {
-        
+    private function get_single_template($query) {
+        $object = $query->get_queried_object();
+
+        $templates = array();
+
+        $templates[] = "single-{$object->post_type}";
+        $templates[] = "single";
+
+        return $this->get_query_template('single', $templates);
     }
 
     /**
@@ -249,10 +285,9 @@ class Twigpress_Template_Loader {
      * @return string
      */
     private function get_comments_popup_template() {
-        
+        return $this->get_query_template('comments_popup');
     }
-    
-    
+
     /**
      * Returns a response template based on the current query
      * @return string the name of the template
@@ -260,16 +295,27 @@ class Twigpress_Template_Loader {
     public function get_template($query) {
         $tmp = false;
 
-        if ($query->is_404() && $tmp = $this->get_404_template()){
-            
-        }
-        if ($query->is_foo() && $tmp = $this->get_foo_template()){
-            
-        }
-        else {
+        if ($query->is_404() && $tmp = $this->get_404_template($query)):
+        elseif ($query->is_search() && $tmp = $this->get_search_template($query)) :
+        elseif ($query->is_tax() && $tmp = $this->get_taxonomy_template($query)) :
+        elseif ($query->is_front_page() && $tmp = $this->get_front_page_template($query)) :
+        elseif ($query->is_home() && $tmp = $this->get_home_template($query)) :
+        elseif ($query->is_attachment() && $tmp = $this->get_attachment_template($query)) :
+        elseif ($query->is_single() && $tmp = $this->get_single_template($query)) :
+        elseif ($query->is_single() && $tmp = $this->get_single_template($query)) :
+        elseif ($query->is_page() && $tmp = $this->get_page_template($query)) :
+        elseif ($query->is_category() && $tmp = $this->get_category_template($query)) :
+        elseif ($query->is_tag() && $tmp = $this->get_tag_template($query)) :
+        elseif ($query->is_author() && $tmp = $this->get_author_template($query)) :
+        elseif ($query->is_date() && $tmp = $this->get_date_template($query)) :
+        elseif ($query->is_archive() && $tmp = $this->get_archive_template($query)) :
+        elseif ($query->is_comments_popup() && $tmp = $this->get_comments_popup_template($query)) :
+        elseif ($query->is_paged() && $tmp = $this->get_paged_template($query)) :
+        else :
             $tmp = $this->get_index_template();
-        }
-        
+        endif;
+
         return $tmp;
     }
+
 }

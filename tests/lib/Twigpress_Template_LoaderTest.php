@@ -11,15 +11,40 @@ class Twigpress_Template_LoaderTest extends PHPUnit_Framework_TestCase {
     /**
      * @var Twigpress_Template_Loader
      */
-    protected $object;
     protected $env; 
+    protected $object;
+    
+    protected $env_barebones; 
+    protected $object_barebones;
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
+    
+    private function makefile($fn){
+        
+        $dir = PROJECT_ROOT.'/tests/mockups/themes/tmp/';
+        
+        if (!is_dir($dir)) {
+            mkdir($dir);
+        }
+        $file = $dir.$fn;
+        $fh = fopen($file, 'w') or die("can't open file");
+        fclose($fh);
+ 
+    }
+
+
     protected function setUp() {
+        
         $this->env = new Twigpress();
+        $this->env->prependPath(PROJECT_ROOT.'/tests/mockups/themes/tmp/');
         $this->object = new Twigpress_Template_Loader($this->env->getLoader());
+        
+        $this->env_barebones = new Twigpress();
+        $this->env_barebones->prependPath(PROJECT_ROOT.'/tests/mockups/themes/BarebonesTheme/');
+        $this->object_barebones = new Twigpress_Template_Loader($this->env_barebones->getLoader());
+
     }
 
     /**
@@ -27,51 +52,166 @@ class Twigpress_Template_LoaderTest extends PHPUnit_Framework_TestCase {
      * This method is called after a test is executed.
      */
     protected function tearDown() {
-        
+     
     }
 
-    /**
-     * @covers {className}::{origMethodName}
-     * @todo Implement testGet_template().
-     */
-    public function testGet_template() {
-        // Remove the following lines when you implement this test.
-
-        $this->assertAttributeEquals($this->env->getLoader(), 'loader', $this->object);
-        
-        $query = new TP_Query();
-        $query->type = 'foo';
-  
-        
-        $this->env->prependPath(PROJECT_ROOT.'/tests/mockups/themes/TwigpressTestTheme/');
-       
-        $this->assertEquals('index.html.twig', $this->object->get_template($query));
-        
-        $this->env->prependPath(PROJECT_ROOT.'/tests/mockups/themes/TwigpressTestTheme2/');
-        
-        $this->assertEquals('foo.html.twig', $this->object->get_template($query));
-        
-    }
     
     /**
      * @covers {className}::{origMethodName}
      * @todo Implement testGet_template().
      */
-    public function testGet_template2() {
+    public function test_Get_Template_404() {
         // Remove the following lines when you implement this test.
-
-        $this->assertAttributeEquals($this->env->getLoader(), 'loader', $this->object);
-        
         $query = new TP_Query();
-        $query->type = 'foo';
-  
-        $this->env->getLoader()->setPaths(array());
-        $this->env->prependPath(PROJECT_ROOT.'/tests/mockups/themes/TwigpressBareTestTheme/');
-        
-        
-        $this->assertEquals('index.html.twig', $this->object->get_template($query));
-
-        
+        $query->type = '404';
+        $this->makefile('404.html.twig');
+        $this->assertEquals('404.html.twig', $this->object->get_template($query));
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query));    
     }
+    
+    public function test_Get_Template_Search() {
+        $query = new TP_Query();
+         
+        $query->type = 'search';
+        $this->makefile('search.html.twig');
+        $this->assertEquals('search.html.twig', $this->object->get_template($query));
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query));    
+    }
+    
+    public function test_Get_Template_Tax() {
+        $query = new TP_Query();
+        $query->type = 'tax';
+        
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query));  
+        
+        $this->makefile('taxonomy.html.twig');
+        $this->assertEquals('taxonomy.html.twig', $this->object->get_template($query));
+        
+        $query->queried_object->taxonomy = 'tax';
+        $this->makefile('taxonomy-tax.html.twig');
+        $this->assertEquals('taxonomy-tax.html.twig', $this->object->get_template($query));
+        
+        $query->queried_object->slug = 'slug';
+        $this->makefile('taxonomy-tax-slug.html.twig');
+        $this->assertEquals('taxonomy-tax-slug.html.twig', $this->object->get_template($query));
+    }
+    
+    public function test_Get_Template_Front_Page() {
+        $query = new TP_Query();
+        $query->type = 'front_page';
+        
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query)); 
+        $this->makefile('front_page.html.twig');
+        $this->assertEquals('front_page.html.twig', $this->object->get_template($query));
+    }
+    
+    public function test_Get_Template_Home() {
+        $query = new TP_Query();
+        $query->type = 'home';
 
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query)); 
+        
+        $this->makefile('home.html.twig');
+        $this->assertEquals('home.html.twig', $this->object->get_template($query));
+    }
+    
+    public function test_Get_Template_Attachent() {
+        $query = new TP_Query();
+        $query->type = 'attachment';
+        $this->markTestIncomplete();
+      
+    }
+    
+    public function test_Get_Template_Single() {
+        $query = new TP_Query();
+        $query->type = 'single';
+        $query->queried_object->post_type = 'doesnotexist';
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query)); 
+        $this->makefile('single.html.twig');
+        $this->assertEquals('single.html.twig', $this->object->get_template($query));
+        $query->queried_object->post_type = 'post_type';
+        $this->makefile('single-post_type.html.twig');
+        $this->assertEquals('single-post_type.html.twig', $this->object->get_template($query));
+    }
+    
+    public function test_Get_Template_Page() {
+        $query = new TP_Query();
+        $query->type = 'page';
+        $this->markTestIncomplete();
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query)); 
+        $this->makefile('page.html.twig');
+        $this->assertEquals('page.html.twig', $this->object->get_template($query));
+    }
+    
+    public function test_Get_Template_Category() {
+        $query = new TP_Query();
+        $query->type = 'category';
+        
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query)); 
+        $this->makefile('category.html.twig');
+        $this->assertEquals('category.html.twig', $this->object->get_template($query));
+        
+        $query->queried_object->slug = 'slug';
+        $this->makefile('category-slug.html.twig');
+        $this->assertEquals('category-slug.html.twig', $this->object->get_template($query));
+        
+        $query->queried_object->slug = 'null';
+        $query->queried_object->term_id = 'term';
+        $this->makefile('category-term.html.twig');
+        $this->assertEquals('category-term.html.twig', $this->object->get_template($query));
+    }
+    
+    public function test_Get_Template_Author() {
+        $query = new TP_Query();
+        $query->type = 'author';
+        
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query)); 
+        $this->makefile('author.html.twig');
+        $this->assertEquals('author.html.twig', $this->object->get_template($query));
+    
+        $query->queried_object->user_nicename = 'nicename';
+        $this->makefile('author-nicename.html.twig');
+        $this->assertEquals('author-nicename.html.twig', $this->object->get_template($query));
+      
+        $query->queried_object->user_nicename = null;
+        $query->queried_object->ID = "id"; 
+        $this->makefile('author-id.html.twig');
+        $this->assertEquals('author-id.html.twig', $this->object->get_template($query));
+
+    }
+    
+    public function test_Get_Template_Date() {
+        $query = new TP_Query();
+        
+        $query->type = 'date';
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query)); 
+        $this->makefile('date.html.twig');
+        $this->assertEquals('date.html.twig', $this->object->get_template($query)); 
+    }
+    
+    public function test_Get_Template_Archive() {
+        $query = new TP_Query();
+        $query->type = 'archive';
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query)); 
+        $this->makefile('archive.html.twig');
+        $this->assertEquals('archive.html.twig', $this->object->get_template($query));
+      
+    }
+    
+    public function test_Get_Template_Comments_Popup() {
+        $query = new TP_Query();
+        $query->type = 'comments_popup';
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query)); 
+        $this->makefile('comments_popup.html.twig');
+        $this->assertEquals('comments_popup.html.twig', $this->object->get_template($query));
+      
+    }
+    
+    public function test_Get_Template_Paged() {
+        $query = new TP_Query();
+        $query->type = 'paged';
+        $this->assertEquals('index.html.twig', $this->object_barebones->get_template($query)); 
+        $this->makefile('paged.html.twig');
+        $this->assertEquals('paged.html.twig', $this->object->get_template($query));
+    }
 }
