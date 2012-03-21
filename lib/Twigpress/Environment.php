@@ -5,7 +5,7 @@
 class Twigpress_Environment extends Twig_Environment {
     
     protected $cache = false;
-
+    
     /**
      * Run on class contruction
      * Registers twig outloader and dependencies
@@ -42,5 +42,15 @@ class Twigpress_Environment extends Twig_Environment {
             }
             return false;
         });
+    }
+    
+    public function autoDisplay($wp_query){
+        $template_loader = new Twigpress_TemplateLoader($this->loader);
+        $template = $this->loadTemplate($template_loader->get_template($wp_query));
+        return $template->render(array());
+    }
+    
+    public function init(){
+        
     }
 }
