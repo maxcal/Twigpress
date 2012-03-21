@@ -16,6 +16,7 @@ if (!defined("PROJECT_ROOT")) {
     define('MOCKUPS_DIR', (__DIR__.'/mockups/'));
 }
 
+
 if (!function_exists( 'add_action' )) {
     function add_action(){
         return false;
@@ -24,4 +25,14 @@ if (!function_exists( 'add_action' )) {
 
 if (!defined("TEMPLATEPATH")) {
     define('TEMPLATEPATH', dirname(__DIR__) . '/mockups/themes/TwigpresTestTheme');
+}
+
+class TP_Query {
+    
+    public $type;
+    
+    function __call($method, $arguments){
+        $prefix = strtolower(substr($method, 3));
+        return ($prefix === $this->type);
+    }
 }
