@@ -21,3 +21,5 @@ Desktop.ini
 # KDE
 .directory
 /nbproject/private/
+/nbproject/
+/tests/mockups/themes/tmp/
