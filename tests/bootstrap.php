@@ -16,6 +16,8 @@ if (!defined("PROJECT_ROOT")) {
     define('MOCKUPS_DIR', (__DIR__.'/mockups/'));
 }
 
+require_once  __DIR__.'/stubs/Wp_Query_stub.php';
+require_once  __DIR__.'/stubs/Fake_Obj_stub.php';
 
 if (!function_exists( 'add_action' )) {
     function add_action(){
@@ -36,3 +38,4 @@ class TP_Query {
         return ($prefix === $this->type);
     }
 }
+
