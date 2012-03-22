@@ -27,7 +27,7 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @covers Twigpress::__construct
+     * @covers Twigpress_Environment::__construct
      */
     public function testConstruct() {
         // Assert that twigpress will look for missing templates
@@ -37,7 +37,7 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
   
       
     /**
-     * @covers Twigpress::__addPath
+     * @covers Twigpress_Environment::__addPath
      */
     public function testAppendPath() {
         
@@ -48,7 +48,7 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @covers Twigpress::__addPath
+     * @covers Twigpress_Environment::__addPath
      */
     public function testPrependPath() {
         $this->object->prependPath(MOCKUPS_DIR);
@@ -56,13 +56,18 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
         $this->assertContains(MOCKUPS_DIR, $paths);
         $this->assertEquals($paths[0], MOCKUPS_DIR);
     }
-
+    /**
+     * @covers Twigpress_Environment::__addPath
+     */
     public function testDisplay(){
         $this->object->prependPath(MOCKUPS_DIR.'/twig');
         $template = $this->object->loadTemplate('helloworld.test.twig');
         $this->assertContains('Hello World!', $template->render(array()));
     }
 
+    /**
+     * @covers Twigpress_Environment::registerGlobalFunctions
+     */
     public function testRegisterGlobalFunctions(){
         $this->object->prependPath(MOCKUPS_DIR.'/twig');
         $this->object->registerGlobalFunctions();
@@ -70,6 +75,17 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
         $template = $this->object->loadTemplate('php_implode.test.twig');
 
         $this->assertEquals('abc', $template->render(array()));
+    }
+    
+    /**
+     * @covers Twigpress_Environment::init
+     * @todo Implement testInit().
+     */
+    public function testInit() {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
     }
 }
 
