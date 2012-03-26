@@ -36,12 +36,9 @@ class Twigpress_Template_LoaderTest extends PHPUnit_Framework_TestCase {
 
         $this->query = new Wp_Query_stub;
         $this->query->queried_object = new Fake_Obj_stub;
-        $this->env = new Twigpress_Environment();
-        $this->env->prependPath(PROJECT_ROOT.'/tests/mockups/themes/tmp/');
-        $this->object = new Twigpress_TemplateLoader($this->env->getLoader());
+        $this->object = new Twigpress_TemplateLoader(array(PROJECT_ROOT.'/tests/mockups/themes/tmp/'));
         $this->env_barebones = new Twigpress_Environment();
-        $this->env_barebones->prependPath(PROJECT_ROOT.'/tests/mockups/themes/BarebonesTheme/');
-        $this->object_barebones = new Twigpress_TemplateLoader($this->env_barebones->getLoader());
+        $this->object_barebones = new Twigpress_TemplateLoader(array(PROJECT_ROOT.'/tests/mockups/themes/BarebonesTheme/'));
     }
 
     /**

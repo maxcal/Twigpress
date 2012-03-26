@@ -28,10 +28,12 @@ class Twigpress_EnvironmentTest extends PHPUnit_Framework_TestCase {
     /**
      * @covers Twigpress_Environment::autoDisplay
      */
-    public function testAutoDisplay() {
-        $output = $this->object->autoRender(new Wp_Query_stub);
-        $this->assertContains('html', $output);
-        $this->assertContains('<title>Twigpress: Autodisplay Error</title>', $output);
+    public function testAutoRender() {
+      //  $output = $this->object->autoRender(new Wp_Query_stub);
+      //  $this->assertContains('html', $output);
+      //  $this->assertContains('<title>Twigpress: Autodisplay Error</title>', $output);
+      $output = $this->object->autoRender(new Wp_Query_stub);  
+      $this->assertFalse($output);
     }
 
     /**

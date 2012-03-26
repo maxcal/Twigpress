@@ -11,7 +11,7 @@ class Twigpress_Environment extends Twig_Environment {
      * Registers twig outloader and dependencies
      */
     public function __construct() {
-        parent::__construct(new Twig_Loader_Filesystem( array( dirname(__FILE__) )  ), array());
+        parent::__construct(new Twig_Loader_Filesystem( array()  ), array());
     }
 
     /**
@@ -45,9 +45,20 @@ class Twigpress_Environment extends Twig_Environment {
     }
     
     public function autoRender($wp_query){
-        $template_loader = new Twigpress_TemplateLoader($this->loader);
-        $template = $this->loadTemplate($template_loader->get_template($wp_query));
-        return $template->render(array());
+        $template_loader = new Twigpress_TemplateLoader($this->loader->getPaths());
+        $tmp = $template_loader->get_template($wp_query);
+        
+        if (!$tmp){
+            if (function_exists('wp_die')){
+                wp_die('Twigpress_TemplateLoader::autoRender failed to load any templates');
+            }
+            return false;
+        }
+        else {
+             $template = $this->loadTemplate($tmp);
+             return $template->render(array());
+        }
+        
     }
     
     public function autoDisplay($wp_query){

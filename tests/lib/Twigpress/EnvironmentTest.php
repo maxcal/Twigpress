@@ -30,9 +30,8 @@ class twigpressTest extends PHPUnit_Framework_TestCase {
      * @covers Twigpress_Environment::__construct
      */
     public function testConstruct() {
-        // Assert that twigpress will look for missing templates
-        $paths = $this->object->getLoader()->getPaths();
-        $this->assertEquals($paths[0], PROJECT_ROOT.'/lib/Twigpress');
+        // Assert that twigpress calls parent construct. How?
+        $this->markTestIncomplete();
     }
   
       

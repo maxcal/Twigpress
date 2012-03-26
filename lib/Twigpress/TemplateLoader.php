@@ -10,19 +10,15 @@
  */
 class Twigpress_TemplateLoader {
 
-    /**
-     *
-     * @var Twig_Loader_Filesystem 
-     */
-    private $loader;
     private $query;
+    private $paths;
 
-    function __construct($twig_loader_filesystem = null) {
-        $this->loader = $twig_loader_filesystem;
+    function __construct(array $paths) {
+        $this->paths = $paths;
     }
 
     private function get_query_template($type, $templates = null) {
-        $paths = $this->loader->getPaths();
+        $paths = $this->paths;
         
         $fn = null;
 
