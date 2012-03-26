@@ -9,8 +9,6 @@
 
 class Twigpress_LoopIterator implements Iterator {
     
-    protected $ix = 0;
-    
     public function __construct($valid, $current) {
         $this->validClosure = $valid;
         $this->currentClosure = $current;
@@ -23,8 +21,5 @@ class Twigpress_LoopIterator implements Iterator {
     }
     public function next() {}
     public function rewind() {}
-    public function key() {
-        $this->ix = $this->ix + 1;
-        return $this->ix;
-    }
+    public function key() {}
 }
