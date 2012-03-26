@@ -44,12 +44,19 @@ class Twigpress_Environment extends Twig_Environment {
         });
     }
     
-    public function autoDisplay($wp_query){
+    public function autoRender($wp_query){
         $template_loader = new Twigpress_TemplateLoader($this->loader);
         $template = $this->loadTemplate($template_loader->get_template($wp_query));
         return $template->render(array());
     }
     
+    public function autoDisplay($wp_query){
+        echo $this->autoRender($wp_query);
+    }
+
+
+
+
     public function init(){
         
     }
