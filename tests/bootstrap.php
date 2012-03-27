@@ -9,7 +9,6 @@ if (!defined("PROJECT_ROOT")) {
 }
 
 require_once  PROJECT_ROOT.'/twigpress.php';
-
 require_once  PROJECT_ROOT.'/tests/stubs/Fake_Obj_stub.php';
 require_once  PROJECT_ROOT.'/tests/stubs/Wp_Query_stub.php';
 
