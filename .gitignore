@@ -18,8 +18,13 @@ Desktop.ini
 !.gitignore
 *~
 
+composer.phar
+composer.lock
+
 # KDE
 .directory
 /nbproject/private/
 /nbproject/
 /tests/mockups/themes/tmp/
+vendor/
+/vendor/
