@@ -26,4 +26,14 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+/**
+ * This is a generic bootstrap
+ * Feel free to roll your own.
+ */
 require_once __DIR__."/vendor/autoload.php";
+
+$Twigpress = new Twigpress_Environment();
+
+if (function_exists("add_action")){
+    add_action('init', array($Twigpress, 'init'));
+}
