@@ -26,27 +26,4 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/**
- * Use the Symfony UniversalClassLoader
- * to load classes 
- */
-require_once __DIR__ . '/lib/ClassLoader/UniversalClassLoader.php';
-use Symfony\Component\ClassLoader\UniversalClassLoader;
-
-$TwigpressLoader = new UniversalClassLoader();
-$TwigpressLoader->registerPrefixes(array(
-    'Twig_Extensions_' => __DIR__ . '/lib/Twig/lib/Twig/Twig-extensions',
-    'Twig_' => __DIR__ . '/lib/Twig/lib',
-    'Twig_' => __DIR__ . '/lib',
-    'Twigpress' => __DIR__ . '/lib'
-));
-
-$TwigpressLoader->register();
-Twig_Autoloader::register();
-
-
-$Twigpress = new Twigpress_Environment();
-
-if (function_exists("add_action")){
-    add_action('init', array($Twigpress, 'init'));
-}
+require_once __DIR__."/vendor/autoload.php";

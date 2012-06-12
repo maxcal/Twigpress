@@ -21,7 +21,10 @@
  * </ul>
  * </pre>
  */
-class Twigpress_TokenParser_Loop extends Twig_TokenParser
+
+namespace Twigpress\Tokenparser;
+
+class LoopTokenParser extends Twig_TokenParser
 {
     /**
      * Parses a token and returns a node.

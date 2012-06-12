@@ -1,8 +1,13 @@
 <?php
 
+namespace Twigpress;
+
+use Twig_Environment;
+use Twig_Loader_Filesystem;
+use Twig_Function_Function;
 
 
-class Twigpress_Environment extends Twig_Environment {
+class Environment extends Twig_Environment {
     
     protected $cache = false;
     
@@ -45,7 +50,7 @@ class Twigpress_Environment extends Twig_Environment {
     }
     
     public function autoRender($wp_query){
-        $template_loader = new Twigpress_TemplateLoader($this->loader->getPaths());
+        $template_loader = new TemplateLoader($this->loader->getPaths());
         $tmp = $template_loader->get_template($wp_query);
         
         if (!$tmp){

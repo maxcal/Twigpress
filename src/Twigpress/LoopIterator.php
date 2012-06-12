@@ -4,10 +4,9 @@
  * Description of Iterator
  * @todo create class discription
  */
+namespace Twigpress;
 
-
-
-class Twigpress_LoopIterator implements Iterator {
+class LoopIterator implements \Iterator {
     
     public function __construct($valid, $current) {
         $this->validClosure = $valid;

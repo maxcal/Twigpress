@@ -5,10 +5,12 @@
  * @author max.calabrese@ymail.com
  */
 
+namespace Twigpress;
+
 /**
  * Twigpress template loader simulates wordpress template inheritance.
  */
-class Twigpress_TemplateLoader {
+class TemplateLoader {
 
     private $query;
     private $paths;
