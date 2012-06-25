@@ -38,6 +38,7 @@ class Environment extends Twig_Environment {
         $paths = $this->loader->getPaths();
         array_unshift ( $paths, $path );
         $this->loader->setPaths($paths);
+        
     }
     
     public function registerGlobalFunctions(){
@@ -49,7 +50,7 @@ class Environment extends Twig_Environment {
         });
     }
     
-    public function autoRender($wp_query){
+    public function autoRender($wp_query, array $view_data = array()){
         $template_loader = new TemplateLoader($this->loader->getPaths());
         $tmp = $template_loader->get_template($wp_query);
         
@@ -61,13 +62,13 @@ class Environment extends Twig_Environment {
         }
         else {
              $template = $this->loadTemplate($tmp);
-             return $template->render(array());
+             return $template->render($view_data);
         }
         
     }
     
-    public function autoDisplay($wp_query){
-        echo $this->autoRender($wp_query);
+    public function autoDisplay($wp_query, array $view_data = array()){
+        echo $this->autoRender($wp_query, $view_data);
     }
 
 
