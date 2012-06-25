@@ -70,11 +70,4 @@ class Environment extends Twig_Environment {
     public function autoDisplay($wp_query, array $view_data = array()){
         echo $this->autoRender($wp_query, $view_data);
     }
-
-
-
-
-    public function init(){
-        
-    }
 }
