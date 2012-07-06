@@ -25,7 +25,7 @@ class Environment extends Twig_Environment {
      * @param string $tmp
      * @return string 
      */
-    public function render($tmp){
+    public function render($tmp, $view_data){
 
         $template = $this->loadTemplate($tmp);
         return $template->render($view_data);
