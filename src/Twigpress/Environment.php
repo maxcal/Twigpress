@@ -19,6 +19,21 @@ class Environment extends Twig_Environment {
         parent::__construct(new Twig_Loader_Filesystem( array()  ), array());
     }
 
+    
+    /**
+     * Render a template
+     * @param string $tmp
+     * @return string 
+     */
+    public function render($tmp){
+
+        $template = $this->loadTemplate($tmp);
+        return $template->render($view_data);
+
+    }
+
+        
+    
     /**
      * Append a path to the Loader paths.
      * 
