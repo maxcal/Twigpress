@@ -2,6 +2,8 @@
 
 ### Twig for Wordpress plugin
 
+** This is no longer maintained. I no longer work with PHP or Wordpress **
+
 Twig is a general purpose template engine. Twigpress provides a Twig template engine for Wordpress themes.  
 Twigpress aims to make the process of creating Wordpress themes more fun, creative and beautiful. 
 
