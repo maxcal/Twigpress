@@ -1,5 +1,5 @@
-## Twigpress (**Nno longer maintained. I no longer work with PHP or Wordpress**)
-
+## Twigpress 
+**No longer maintained. I no longer work with PHP or Wordpress**
 ### Twig for Wordpress plugin
 
 
